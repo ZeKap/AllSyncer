@@ -1,24 +1,32 @@
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 
 
 std::string fileFromPath = "/home/kap/test/copy-2/from/file.txt";
 std::string fileToPath = "/home/kap/test/copy-2/to/file.txt";
 
 int main() {
-    std::ifstream input(fileFromPath);
-    std::ofstream output(fileToPath);
+    std::filesystem::path input(fileFromPath);
+    std::filesystem::path output(fileToPath);
 
     // if there is a problem opening one of the files
-    if(!input.is_open() || !output.is_open()) {
+    if(!std::filesystem::exists(input)) {
         std::cout << "Error" << std::endl;
-        return 1;
     }
 
-    output << input.rdbuf();
+    // copy file
+    std::filesystem::copy_file(input, output, std::filesystem::copy_options::overwrite_existing);
 
-    input.close();
-    output.close();
+    // get last write time
+    std::filesystem::file_time_type lastWriteTime = std::filesystem::last_write_time(input);
+    // copy it to the file
+    std::filesystem::last_write_time(output, lastWriteTime);
+
+    // get permissions
+    std::filesystem::perms perms = std::filesystem::status(input).permissions();
+    // copy it to the file
+    std::filesystem::permissions(output, perms);
 
     return 0;
 }
