@@ -1,13 +1,13 @@
 #include <iostream>
-#include "include/File.h"
+#include "include/Entry.h"
 
 
-std::string fileFromPath = "/home/kap/test/copy-2/from/file.txt";
-std::string fileToPath = "/home/kap/test/copy-2/to/file.txt";
+std::string folderFromPath = "/home/kap/test/copy-2/from/";
+std::string folderToPath = "/home/kap/test/copy-2/to/";
 
 int main() {
-    AllSyncer::File input(fileFromPath);
-    input.copyAll(fileToPath);
+    AllSyncer::Entry input(folderFromPath);
+    input.copyAll(folderToPath);
 
     return 0;
 }
