@@ -34,20 +34,38 @@ namespace AllSyncer {
          * @return error code if there is one
          */
         static int copyAll(const AllSyncer::Entry& src, const std::string &dest);
+        /**
+         * @brief Copy one file to destination, with the options from filesystem lib
+         *
+         * @param src the Entry type of the file to copy
+         * @param dest the destination in a String
+         * @param options one or more of the enum in the filesystem lib
+         */
+        static void copyFile(const AllSyncer::Entry& src, const std::string &dest,
+                            std::filesystem::copy_options options =
+                            std::filesystem::copy_options::update_existing);
+        /**
+         * @brief Copy a folder to the destination in parameter and its contents
+         *
+         * @param src the Entry type to copy from
+         * @param dest the destination to copy to
+         * @return the code error if any
+         */
+        static int copyFolder(const AllSyncer::Entry& src, const std::string &dest);
     public:
         /**
          * Constructor of the files, from the given path it get editTime and perms
          * @param path: string path
          */
         explicit Entry(const std::string& path);
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "modernize-use-nodiscard"
+        #pragma clang diagnostic push
+        #pragma ide diagnostic ignored "modernize-use-nodiscard"
         /**
          * Copy the file contents edit time and perms to the given destination
          * @return a code error
          */
         int copyAll(const std::string& destination) const;
-#pragma clang diagnostic pop
+        #pragma clang diagnostic pop
     };
 
 } // AllSyncer
