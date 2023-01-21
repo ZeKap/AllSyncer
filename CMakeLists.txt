@@ -3,4 +3,4 @@ project(AllSyncer)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(AllSyncer main.cpp src/Entry.cpp include/json.hpp)
+add_executable(AllSyncer main.cpp src/Entry.cpp nlohmann-json/json.hpp)
