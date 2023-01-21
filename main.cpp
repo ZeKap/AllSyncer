@@ -5,11 +5,6 @@
 #include "nlohmann-json/json.hpp"
 using json = nlohmann::json;
 
-std::string folderFromPath = "/Users/kap/trucs-tests/AllSyncer/from/";
-std::string folderToPath = "/Users/kap/trucs-tests/AllSyncer/to";
-
-
-std::string configFilePath = "/Users/kap/trucs-tests/AllSyncer/config.json";
 
 json getParsedJsonFromLink(const std::string& path) {
     // open json file
@@ -25,19 +20,24 @@ json getParsedJsonFromLink(const std::string& path) {
     return json::parse(configFileString);
 }
 
+
+std::string folderFromPath = "/Users/kap/trucs-tests/AllSyncer/from/";
+std::string folderToPath = "/Users/kap/trucs-tests/AllSyncer/to";
+
+std::string configFilePath = "/Users/kap/trucs-tests/AllSyncer/config.json";
+const json config = getParsedJsonFromLink(configFilePath);
+
 int main() {
-    AllSyncer::Entry input(folderFromPath);
-    input.copyAll(folderToPath);
 
-    json jsonConfig = getParsedJsonFromLink(configFilePath);
-
-    for(auto & key : jsonConfig.items()) {
+    for(auto & key : config.items()) {
         std::cout << key.key() << std::endl;
         for(auto & value : key.value()) {
             std::cout << "    " << value << std::endl;
         }
     }
 
+    AllSyncer::Entry input(folderFromPath, config);
+    input.copyAll(folderToPath);
 
     return 0;
 }

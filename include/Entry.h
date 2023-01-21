@@ -6,6 +6,8 @@
 #define ALLSYNCER_ENTRY_H
 
 #include <filesystem>
+#include "../nlohmann-json/json.hpp"
+using json = nlohmann::json;
 
 namespace AllSyncer {
 
@@ -15,6 +17,10 @@ namespace AllSyncer {
      */
     class Entry {
     private:
+        /**
+         * JSON config parsed, given for each time an entry is created
+         */
+        json config;
         /**
          * Path to the file
          */
@@ -57,7 +63,7 @@ namespace AllSyncer {
          * Constructor of the files, from the given path it get editTime and perms
          * @param path: string path
          */
-        explicit Entry(const std::string& path);
+        explicit Entry(const std::string& path, const json & configInput);
         #pragma clang diagnostic push
         #pragma ide diagnostic ignored "modernize-use-nodiscard"
         /**

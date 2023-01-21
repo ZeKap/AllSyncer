@@ -6,7 +6,7 @@
 #include "../include/Entry.h"
 
 namespace AllSyncer {
-    Entry::Entry(const std::string& path) {
+    Entry::Entry(const std::string& path, const json & configInput) {
         // check if the file exists
         if(!std::filesystem::exists(path)) {
             exit(1);
@@ -16,6 +16,9 @@ namespace AllSyncer {
         this->path = path;
         this->editTime = std::filesystem::last_write_time(path);
         this->perms = std::filesystem::status(path).permissions();
+
+        // store config in object
+        this->config = configInput;
     }
 
 
@@ -49,7 +52,7 @@ namespace AllSyncer {
         // else we copy its contents
         for(const std::filesystem::directory_entry& newEntry : std::filesystem::directory_iterator(src.path)) {
             // copy the newEntry, if there was an error, return it
-            int error = copyAll(Entry(newEntry.path()), dest / newEntry.path().filename());
+            int error = copyAll(Entry(newEntry.path(), src.config), dest / newEntry.path().filename());
             if(error != 0) {
                 return error;
             }
