@@ -24,43 +24,66 @@ namespace AllSyncer {
 
     void Entry::copyFile(const AllSyncer::Entry& src, const std::string &dest,
                             std::filesystem::copy_options options) {
-        try {
-            // copy content of the entry
-            std::filesystem::copy(src.path, dest, options);
 
-            // copy its edit time and permissions
-            std::filesystem::last_write_time(dest, src.editTime);
-            std::filesystem::permissions(dest, src.perms);
+        // we need to check if the file need to be copied before copying it, or we create it
+        std::filesystem::file_time_type srcEditTime = src.editTime;
 
-        } catch (std::filesystem::filesystem_error & e) {
-            std::cerr << e.what() << std::endl;
+        if((std::filesystem::exists(dest) &&
+                srcEditTime > std::filesystem::last_write_time(dest))
+            || !std::filesystem::exists(dest)) {
+            try {
+
+                // copy content of the entry
+                std::filesystem::copy(src.path, dest, options);
+
+                // copy its edit time and permissions
+                std::filesystem::last_write_time(dest, src.editTime);
+                std::filesystem::permissions(dest, src.perms);
+
+                std::cout << "File   " << src.path << "\n   --> \""
+                          << dest << "\"" << std::endl;
+
+            } catch (std::filesystem::filesystem_error &e) {
+                std::cerr << e.what() << std::endl;
+            }
         }
-
     }
 
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "misc-no-recursion"
     void Entry::copyFolder(const AllSyncer::Entry& src, const std::string &dest) {
-        try {
-            // if the destination doesn't exist, create it
-            if(!std::filesystem::exists(dest)) {
-                std::filesystem::create_directories(dest);
-            }
 
-            // copy its edit time and permissions
-            std::filesystem::last_write_time(dest, src.editTime);
-            std::filesystem::permissions(dest, src.perms);
+        // we need to check if the folder need to be copied before copying it, or we create it
+        std::filesystem::file_time_type srcEditTime = src.editTime;
 
-            // if the folder is empty, we stop here
-            if(std::filesystem::is_empty(src.path)) {
-                return;
+        if((std::filesystem::exists(dest) &&
+            srcEditTime > std::filesystem::last_write_time(dest))
+           || !std::filesystem::exists(dest)) {
+            try {
+
+                if(!std::filesystem::exists(dest)) {
+                    std::filesystem::create_directories(dest);
+                }
+
+                // copy its edit time and permissions
+                std::filesystem::last_write_time(dest, src.editTime);
+                std::filesystem::permissions(dest, src.perms);
+
+                std::cout << "Folder \"" << src.path.string() << "\"\n   --> \""
+                          << dest << "\"" << std::endl;
+
+                // if the folder is empty, we stop here
+                if(std::filesystem::is_empty(src.path)) {
+                    return;
+                }
+
+            } catch (std::filesystem::filesystem_error &e) {
+                std::cerr << e.what() << std::endl;
             }
-        } catch (std::filesystem::filesystem_error & e) {
-            std::cerr << e.what() << std::endl;
         }
 
-        // else we copy its contents
+        // anyway let's copy its contents
         for(const std::filesystem::directory_entry& newEntry : std::filesystem::directory_iterator(src.path)) {
             // copy the newEntry, if there was an error, return it
             copyAll(Entry(newEntry.path(), src.config), dest / newEntry.path().filename());

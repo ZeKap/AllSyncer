@@ -29,13 +29,13 @@ const json config = getParsedJsonFromLink(configFilePath);
 
 int main() {
 
-    // example to use json parsed
+    /*// example to use json parsed
     for(auto & key : config.items()) {
         std::cout << key.key() << std::endl;
         for(auto & value : key.value()) {
             std::cout << "    " << value << std::endl;
         }
-    }
+    }*/
 
     // we add a path and copy it
     AllSyncer::Entry input(folderFromPath, config);
