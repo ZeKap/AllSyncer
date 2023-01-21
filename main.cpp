@@ -31,12 +31,10 @@ int main() {
 
     json jsonConfig = getParsedJsonFromLink(configFilePath);
 
-    for (auto & entry : jsonConfig) {
-        std::cout << entry << std::endl;
-        if(!entry.empty()) {
-            for(auto & entry2: entry) {
-                std::cout << "   " << entry2 << std::endl;
-            }
+    for(auto & key : jsonConfig.items()) {
+        std::cout << key.key() << std::endl;
+        for(auto & value : key.value()) {
+            std::cout << "    " << value << std::endl;
         }
     }
 
