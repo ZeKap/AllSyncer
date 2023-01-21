@@ -9,3 +9,5 @@
 # JetBrains, VSCode files
 .idea
 /cmake-build-debug/
+/build
+.vscode
