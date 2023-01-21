@@ -24,47 +24,54 @@ namespace AllSyncer {
 
     void Entry::copyFile(const AllSyncer::Entry& src, const std::string &dest,
                             std::filesystem::copy_options options) {
-        // copy content of the entry
-        std::filesystem::copy(src.path, dest, options);
+        try {
+            // copy content of the entry
+            std::filesystem::copy(src.path, dest, options);
 
-        // copy its edit time and permissions
-        std::filesystem::last_write_time(dest, src.editTime);
-        std::filesystem::permissions(dest, src.perms);
+            // copy its edit time and permissions
+            std::filesystem::last_write_time(dest, src.editTime);
+            std::filesystem::permissions(dest, src.perms);
+
+        } catch (std::filesystem::filesystem_error & e) {
+            std::cerr << e.what() << std::endl;
+        }
+
     }
 
 
-    int Entry::copyFolder(const AllSyncer::Entry& src, const std::string &dest) {
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "misc-no-recursion"
+    void Entry::copyFolder(const AllSyncer::Entry& src, const std::string &dest) {
+        try {
+            // if the destination doesn't exist, create it
+            if(!std::filesystem::exists(dest)) {
+                std::filesystem::create_directories(dest);
+            }
 
-        // if the destination doesn't exist, create it
-        if(!std::filesystem::exists(dest)) {
-            std::filesystem::create_directories(dest);
-        }
+            // copy its edit time and permissions
+            std::filesystem::last_write_time(dest, src.editTime);
+            std::filesystem::permissions(dest, src.perms);
 
-        // copy its edit time and permissions
-        std::filesystem::last_write_time(dest, src.editTime);
-        std::filesystem::permissions(dest, src.perms);
-
-        // if the folder is empty, we stop here
-        if(std::filesystem::is_empty(src.path)) {
-            return 0;
+            // if the folder is empty, we stop here
+            if(std::filesystem::is_empty(src.path)) {
+                return;
+            }
+        } catch (std::filesystem::filesystem_error & e) {
+            std::cerr << e.what() << std::endl;
         }
 
         // else we copy its contents
         for(const std::filesystem::directory_entry& newEntry : std::filesystem::directory_iterator(src.path)) {
             // copy the newEntry, if there was an error, return it
-            int error = copyAll(Entry(newEntry.path(), src.config), dest / newEntry.path().filename());
-            if(error != 0) {
-                return error;
-            }
+            copyAll(Entry(newEntry.path(), src.config), dest / newEntry.path().filename());
         }
-
-        return 0;
     }
+#pragma clang diagnostic pop
 
 
     #pragma clang diagnostic push
     #pragma ide diagnostic ignored "misc-no-recursion"
-    int Entry::copyAll(const AllSyncer::Entry& src, const std::string &dest) {
+    void Entry::copyAll(const AllSyncer::Entry& src, const std::string &dest) {
 
         switch (std::filesystem::status(src.path).type()) {
 
@@ -84,19 +91,17 @@ namespace AllSyncer {
         default:
             break;
         }
-
-        return 0;
     }
     #pragma clang diagnostic pop
 
 
 
-    int Entry::copyAll(const std::string& destination) const {
+    void Entry::copyAll(const std::string& destination) const {
 
         // if the source doesn't exist, display an error
         if (!std::filesystem::exists(this->path)) {
             std::cerr << "Error: source path does not exist: " << this->path << std::endl;
-            return 1;
+            return;
         }
 
         // if the destination doesn't exist, create it
@@ -104,7 +109,7 @@ namespace AllSyncer {
             std::filesystem::create_directories(destination);
         }
 
-        return copyAll(*this, destination);
+        copyAll(*this, destination);
     }
 
 } // AllSyncer

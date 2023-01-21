@@ -39,7 +39,7 @@ namespace AllSyncer {
          * @param dest string to the path where to copy the entry
          * @return error code if there is one
          */
-        static int copyAll(const AllSyncer::Entry& src, const std::string &dest);
+        static void copyAll(const AllSyncer::Entry& src, const std::string &dest);
         /**
          * @brief Copy one file to destination, with the options from filesystem lib
          *
@@ -57,7 +57,7 @@ namespace AllSyncer {
          * @param dest the destination to copy to
          * @return the code error if any
          */
-        static int copyFolder(const AllSyncer::Entry& src, const std::string &dest);
+        static void copyFolder(const AllSyncer::Entry& src, const std::string &dest);
     public:
         /**
          * Constructor of the files, from the given path it get editTime and perms
@@ -70,7 +70,7 @@ namespace AllSyncer {
          * Copy the file contents edit time and perms to the given destination
          * @return a code error
          */
-        int copyAll(const std::string& destination) const;
+        void copyAll(const std::string& destination) const;
         #pragma clang diagnostic pop
     };
 
