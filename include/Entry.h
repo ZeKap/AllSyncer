@@ -38,28 +38,21 @@ namespace AllSyncer {
          */
         std::filesystem::perms perms;
         /**
-         * Copy all files from one Entry to a destination set in String
-         * @param src Entry, to get its src, perms and edit time
-         * @param dest string to the src where to copy the entry
-         * @return error code if there is one
+         * @brief Copy all files and folders from the Entry src to the Entry dest, will call copyFile and copyFolder
          */
         void copyAll();
         /**
-         * @brief Copy one file to destination, with the options from filesystem lib
-         *
-         * @param src the Entry type of the file to copy
-         * @param dest the destination in a String
-         * @param options one or more of the enum in the filesystem lib
+         * @brief Copy Entry as a file
          */
         void copyFile();
         /**
-         * @brief Copy a folder to the destination in parameter and its contents
-         *
-         * @param src the Entry type to copy from
-         * @param dest the destination to copy to
-         * @return the code error if any
+         * @brief Copy Entry as a folder (is recursive)
          */
         void copyFolder();
+        /**
+         * Called when config says to force a sync, will delete folder and recreate it
+         */
+        void forceCopyFolder();
     public:
         /**
          * Constructor of the files, from the given src it get editTime and perms
@@ -69,8 +62,7 @@ namespace AllSyncer {
         #pragma clang diagnostic push
         #pragma ide diagnostic ignored "modernize-use-nodiscard"
         /**
-         * Copy the file contents edit time and perms to the given destination
-         * @return a code error
+         * Only public copy function, will create folder to source if not existing and call other copy functions
          */
         void copy();
         #pragma clang diagnostic pop

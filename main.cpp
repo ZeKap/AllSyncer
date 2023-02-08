@@ -35,7 +35,7 @@ int main() {
         }
     }*/
 
-    // we create a vector containing all folders from config
+    // we create a vector containing all folders from config and the config
     std::vector<AllSyncer::Entry> folders;
     for (auto& [key, value] : config["foldersToSync"].items()) {
         //std::cout << "Folder: " << key << ", Path: " << value.get<std::string>() << std::endl;

@@ -23,6 +23,43 @@ namespace AllSyncer {
     }
 
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "misc-no-recursion"
+    void Entry::copyAll() {
+
+        switch (std::filesystem::status(src).type()) {
+
+            // if the src is a file
+            case std::filesystem::file_type::regular:
+                // copy only the file
+                copyFile();
+                break;
+
+
+            // if it's a folder, check if it needs to be forced sync
+            case std::filesystem::file_type::directory: {
+
+                auto find = std::find(config["folderContainingAlways"].begin(),
+                                      config["folderContainingAlways"].end(),
+                                      src.filename().string());
+                // we force sync when we find the filename in the config in folderContainingAlways
+                if (find != config["folderContainingAlways"].end()) {
+                    forceCopyFolder();
+                } else {
+                    copyFolder();
+                }
+
+                break;
+            }
+
+
+            default:
+                break;
+        }
+    }
+#pragma clang diagnostic pop
+
+
     void Entry::copyFile() {
 
         // we need to check if the file need to be copied before copying it, or we create it
@@ -90,34 +127,14 @@ namespace AllSyncer {
             //copyAll(Entry(newEntry.path(), src.config), dest / newEntry.path().filename());
         }
     }
-#pragma clang diagnostic pop
 
-
-    #pragma clang diagnostic push
-    #pragma ide diagnostic ignored "misc-no-recursion"
-    void Entry::copyAll() {
-
-        switch (std::filesystem::status(src).type()) {
-
-        // if the src is a file
-        case std::filesystem::file_type::regular:
-            // copy only the file
-            copyFile();
-            break;
-
-
-        // if it's a folder, copy edit time and permissions for all files
-        case std::filesystem::file_type::directory:
-            copyFolder();
-            break;
-
-
-        default:
-            break;
-        }
+    void Entry::forceCopyFolder() {
+        std::filesystem::remove_all(dest);
+        std::cout << "Removed " << dest << " because it's in the list of force sync" << std::endl;
+        copyFolder();
+        std::cout << "Copied " << dest << " and now we're synced" << std::endl;
     }
-    #pragma clang diagnostic pop
-
+#pragma clang diagnostic pop
 
 
     void Entry::copy() {
