@@ -43,7 +43,7 @@ namespace AllSyncer {
          * @param dest string to the src where to copy the entry
          * @return error code if there is one
          */
-        static void copyAll();
+        void copyAll();
         /**
          * @brief Copy one file to destination, with the options from filesystem lib
          *
@@ -51,7 +51,7 @@ namespace AllSyncer {
          * @param dest the destination in a String
          * @param options one or more of the enum in the filesystem lib
          */
-        static void copyFile();
+        void copyFile();
         /**
          * @brief Copy a folder to the destination in parameter and its contents
          *
@@ -59,7 +59,7 @@ namespace AllSyncer {
          * @param dest the destination to copy to
          * @return the code error if any
          */
-        static void copyFolder();
+        void copyFolder();
     public:
         /**
          * Constructor of the files, from the given src it get editTime and perms
