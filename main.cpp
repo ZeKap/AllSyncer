@@ -22,10 +22,6 @@ json getParsedJsonFromLink(const std::string& path) {
     return json::parse(configFileString);
 }
 
-
-std::string folderFromPath = "/Users/kap/trucs-tests/AllSyncer/from/";
-std::string folderToPath = "/Users/kap/trucs-tests/AllSyncer/to";
-
 std::string configFilePath = "/Users/kap/trucs-tests/AllSyncer/config.json";
 const json config = getParsedJsonFromLink(configFilePath);
 
