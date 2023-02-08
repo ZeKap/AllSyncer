@@ -85,8 +85,9 @@ namespace AllSyncer {
 
         // anyway let's copy its contents
         for(const std::filesystem::directory_entry& newEntry : std::filesystem::directory_iterator(src)) {
-            // copy the newEntry, if there was an error, return it
-            copyAll(Entry(newEntry.path(), src.config), dest / newEntry.path().filename());
+            Entry entry(newEntry.path(), dest/newEntry.path().filename(), config);
+            entry.copy();
+            //copyAll(Entry(newEntry.path(), src.config), dest / newEntry.path().filename());
         }
     }
 #pragma clang diagnostic pop
@@ -101,13 +102,13 @@ namespace AllSyncer {
         // if the src is a file
         case std::filesystem::file_type::regular:
             // copy only the file
-            copyFile(src, dest);
+            copyFile();
             break;
 
 
         // if it's a folder, copy edit time and permissions for all files
         case std::filesystem::file_type::directory:
-            copyFolder(src, dest);
+            copyFolder();
             break;
 
 

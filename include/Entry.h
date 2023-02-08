@@ -72,7 +72,7 @@ namespace AllSyncer {
          * Copy the file contents edit time and perms to the given destination
          * @return a code error
          */
-        void copy() const;
+        void copy();
         #pragma clang diagnostic pop
     };
 

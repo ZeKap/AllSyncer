@@ -37,9 +37,9 @@ int main() {
         }
     }*/
 
-    // we add a path and copy it
-    AllSyncer::Entry input(folderFromPath, config);
-    input.copyAll(folderToPath);
+    // we add a src and copy it
+    AllSyncer::Entry input(folderFromPath, folderToPath, config);
+    input.copy();
 
     return 0;
 }
