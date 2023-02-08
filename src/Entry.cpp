@@ -119,20 +119,20 @@ namespace AllSyncer {
 
 
 
-    void Entry::copyAll(const std::string& destination) const {
+    void Entry::copy() {
 
         // if the source doesn't exist, display an error
-        if (!std::filesystem::exists(this->path)) {
-            std::cerr << "Error: source path does not exist: " << this->path << std::endl;
+        if (!std::filesystem::exists(src)) {
+            std::cerr << "Error: source path does not exist: " << src << std::endl;
             return;
         }
 
         // if the destination doesn't exist, create it
-        if(std::filesystem::exists(destination)) {
-            std::filesystem::create_directories(destination);
+        if(std::filesystem::exists(dest)) {
+            std::filesystem::create_directories(dest);
         }
 
-        copyAll(*this, destination);
+        copyAll();
     }
 
 } // AllSyncer
