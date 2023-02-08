@@ -6,7 +6,7 @@
 #include "../include/Entry.h"
 
 namespace AllSyncer {
-    Entry::Entry(const std::string& path, const json & configInput) {
+    Entry::Entry(const std::string& path, const std::string& dest, const json & configInput) {
         // check if the file exists
         if(!std::filesystem::exists(path)) {
             exit(1);
@@ -14,6 +14,7 @@ namespace AllSyncer {
 
         // store path to the file, its edit time and its permissions
         this->path = path;
+        this->dest = dest;
         this->editTime = std::filesystem::last_write_time(path);
         this->perms = std::filesystem::status(path).permissions();
 
