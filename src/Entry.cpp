@@ -94,9 +94,9 @@ namespace AllSyncer {
 
     #pragma clang diagnostic push
     #pragma ide diagnostic ignored "misc-no-recursion"
-    void Entry::copyAll(const AllSyncer::Entry& src, const std::string &dest) {
+    void Entry::copyAll() {
 
-        switch (std::filesystem::status(src.path).type()) {
+        switch (std::filesystem::status(src).type()) {
 
         // if the src is a file
         case std::filesystem::file_type::regular:
