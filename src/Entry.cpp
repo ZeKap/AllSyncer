@@ -39,11 +39,12 @@ namespace AllSyncer {
             // if it's a folder, check if it needs to be forced sync
             case std::filesystem::file_type::directory: {
 
-                auto find = std::find(config["folderContainingAlways"].begin(),
-                                      config["folderContainingAlways"].end(),
+                // check the folder name to check if it needs to be synced
+                auto find = std::find(config["folderAlways"].begin(),
+                                      config["folderAlways"].end(),
                                       src.filename().string());
-                // we force sync when we find the filename in the config in folderContainingAlways
-                if (find != config["folderContainingAlways"].end()) {
+                // we force sync when we find the filename in the config in folderAlways
+                if (find != config["folderAlways"].end()) {
                     forceCopyFolder();
                 } else {
                     copyFolder();
