@@ -24,7 +24,11 @@ namespace AllSyncer {
         /**
          * Path to the file
          */
-        std::filesystem::path path;
+        std::filesystem::path src;
+        /**
+         * Path to destination
+         */
+        std::filesystem::path dest;
         /**
          * Last edit time
          */
@@ -35,11 +39,11 @@ namespace AllSyncer {
         std::filesystem::perms perms;
         /**
          * Copy all files from one Entry to a destination set in String
-         * @param src Entry, to get its path, perms and edit time
-         * @param dest string to the path where to copy the entry
+         * @param src Entry, to get its src, perms and edit time
+         * @param dest string to the src where to copy the entry
          * @return error code if there is one
          */
-        static void copyAll(const AllSyncer::Entry& src, const std::string &dest);
+        void copyAll();
         /**
          * @brief Copy one file to destination, with the options from filesystem lib
          *
@@ -47,9 +51,7 @@ namespace AllSyncer {
          * @param dest the destination in a String
          * @param options one or more of the enum in the filesystem lib
          */
-        static void copyFile(const AllSyncer::Entry& src, const std::string &dest,
-                            std::filesystem::copy_options options =
-                            std::filesystem::copy_options::update_existing);
+        void copyFile();
         /**
          * @brief Copy a folder to the destination in parameter and its contents
          *
@@ -57,20 +59,20 @@ namespace AllSyncer {
          * @param dest the destination to copy to
          * @return the code error if any
          */
-        static void copyFolder(const AllSyncer::Entry& src, const std::string &dest);
+        void copyFolder();
     public:
         /**
-         * Constructor of the files, from the given path it get editTime and perms
-         * @param path: string path
+         * Constructor of the files, from the given src it get editTime and perms
+         * @param path: string src
          */
-        explicit Entry(const std::string& path, const json & configInput);
+        explicit Entry(const std::string& path, const std::string& dest, const json & configInput);
         #pragma clang diagnostic push
         #pragma ide diagnostic ignored "modernize-use-nodiscard"
         /**
          * Copy the file contents edit time and perms to the given destination
          * @return a code error
          */
-        void copyAll(const std::string& destination) const;
+        void copy();
         #pragma clang diagnostic pop
     };
 
