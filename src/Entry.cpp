@@ -12,8 +12,8 @@ namespace AllSyncer {
             exit(1);
         }
 
-        // store path to the file, its edit time and its permissions
-        this->path = path;
+        // store src to the file, its edit time and its permissions
+        this->src = path;
         this->dest = dest;
         this->editTime = std::filesystem::last_write_time(path);
         this->perms = std::filesystem::status(path).permissions();
@@ -23,11 +23,10 @@ namespace AllSyncer {
     }
 
 
-    void Entry::copyFile(const AllSyncer::Entry& src, const std::string &dest,
-                            std::filesystem::copy_options options) {
+    void Entry::copyFile() {
 
         // we need to check if the file need to be copied before copying it, or we create it
-        std::filesystem::file_time_type srcEditTime = src.editTime;
+        std::filesystem::file_time_type srcEditTime = editTime;
 
         if((std::filesystem::exists(dest) &&
                 srcEditTime > std::filesystem::last_write_time(dest))
@@ -35,13 +34,13 @@ namespace AllSyncer {
             try {
 
                 // copy content of the entry
-                std::filesystem::copy(src.path, dest, options);
+                std::filesystem::copy(src, dest/*, options*/);
 
                 // copy its edit time and permissions
-                std::filesystem::last_write_time(dest, src.editTime);
-                std::filesystem::permissions(dest, src.perms);
+                std::filesystem::last_write_time(dest, editTime);
+                std::filesystem::permissions(dest, perms);
 
-                std::cout << "File   " << src.path << "\n   --> \""
+                std::cout << "File   " << src << "\n   --> \""
                           << dest << "\"" << std::endl;
 
             } catch (std::filesystem::filesystem_error &e) {
