@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+
+#include <vector>
 #include "include/Entry.h"
 #include "nlohmann-json/json.hpp"
 using json = nlohmann::json;
@@ -36,6 +38,13 @@ int main() {
             std::cout << "    " << value << std::endl;
         }
     }*/
+
+
+    std::vector<AllSyncer::Entry> folders;
+
+    for (auto& [key, value] : config["foldersToSync"].items()) {
+        std::cout << "Folder: " << key << ", Path: " << value.get<std::string>() << std::endl;
+    }
 
     // we add a src and copy it
     AllSyncer::Entry input(folderFromPath, folderToPath, config);
