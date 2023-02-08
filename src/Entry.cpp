@@ -52,10 +52,10 @@ namespace AllSyncer {
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "misc-no-recursion"
-    void Entry::copyFolder(const AllSyncer::Entry& src, const std::string &dest) {
+    void Entry::copyFolder() {
 
         // we need to check if the folder need to be copied before copying it, or we create it
-        std::filesystem::file_time_type srcEditTime = src.editTime;
+        std::filesystem::file_time_type srcEditTime = editTime;
 
         if((std::filesystem::exists(dest) &&
             srcEditTime > std::filesystem::last_write_time(dest))
@@ -67,14 +67,14 @@ namespace AllSyncer {
                 }
 
                 // copy its edit time and permissions
-                std::filesystem::last_write_time(dest, src.editTime);
-                std::filesystem::permissions(dest, src.perms);
+                std::filesystem::last_write_time(dest, editTime);
+                std::filesystem::permissions(dest, perms);
 
-                std::cout << "Folder \"" << src.path.string() << "\"\n   --> \""
+                std::cout << "Folder \"" << src.string() << "\"\n   --> \""
                           << dest << "\"" << std::endl;
 
                 // if the folder is empty, we stop here
-                if(std::filesystem::is_empty(src.path)) {
+                if(std::filesystem::is_empty(src)) {
                     return;
                 }
 
@@ -84,7 +84,7 @@ namespace AllSyncer {
         }
 
         // anyway let's copy its contents
-        for(const std::filesystem::directory_entry& newEntry : std::filesystem::directory_iterator(src.path)) {
+        for(const std::filesystem::directory_entry& newEntry : std::filesystem::directory_iterator(src)) {
             // copy the newEntry, if there was an error, return it
             copyAll(Entry(newEntry.path(), src.config), dest / newEntry.path().filename());
         }
