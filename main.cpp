@@ -39,16 +39,17 @@ int main() {
         }
     }*/
 
-
+    // we create a vector containing all folders from config
     std::vector<AllSyncer::Entry> folders;
-
     for (auto& [key, value] : config["foldersToSync"].items()) {
-        std::cout << "Folder: " << key << ", Path: " << value.get<std::string>() << std::endl;
+        //std::cout << "Folder: " << key << ", Path: " << value.get<std::string>() << std::endl;
+        folders.emplace_back(key, value.get<std::string>(), config);
     }
 
-    // we add a src and copy it
-    AllSyncer::Entry input(folderFromPath, folderToPath, config);
-    input.copy();
+    // for each entry in vector, we copy it with config
+    for (AllSyncer::Entry item: folders) {
+        item.copy();
+    }
 
     return 0;
 }
