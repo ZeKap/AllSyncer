@@ -40,8 +40,8 @@ namespace AllSyncer {
                 std::filesystem::last_write_time(dest, editTime);
                 std::filesystem::permissions(dest, perms);
 
-                std::cout << "File   " << src << "\n   --> \""
-                          << dest << "\"" << std::endl;
+                std::cout << "File   " << src << "\n   --> "
+                          << dest << std::endl;
 
             } catch (std::filesystem::filesystem_error &e) {
                 std::cerr << e.what() << std::endl;
@@ -70,8 +70,8 @@ namespace AllSyncer {
                 std::filesystem::last_write_time(dest, editTime);
                 std::filesystem::permissions(dest, perms);
 
-                std::cout << "Folder \"" << src.string() << "\"\n   --> \""
-                          << dest << "\"" << std::endl;
+                std::cout << "Folder \"" << src.string() << "\"\n   --> "
+                          << dest << std::endl;
 
                 // if the folder is empty, we stop here
                 if(std::filesystem::is_empty(src)) {
@@ -86,7 +86,7 @@ namespace AllSyncer {
         // anyway let's copy its contents
         for(const std::filesystem::directory_entry& newEntry : std::filesystem::directory_iterator(src)) {
             Entry entry(newEntry.path(), dest/newEntry.path().filename(), config);
-            entry.copy();
+            entry.copyAll();
             //copyAll(Entry(newEntry.path(), src.config), dest / newEntry.path().filename());
         }
     }
